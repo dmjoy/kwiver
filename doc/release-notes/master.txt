@@ -48,7 +48,6 @@ Vital
  * Added metadata tag, VITAL_META_VIDEO_KEY_FRAME, which is a bool that
    marks if a video frame is a key frame.
 
-=======
 vital util
 
  * Added simple statistic class for accumulating values. Computes
@@ -56,24 +55,17 @@ vital util
 
 Vital Tools
 
- * Converted tools to use applet plugin approach.
-
- * Converted stand-alone tools to reside under the main "kwiver" top
+ * Converting stand-alone tools to reside under the main "kwiver" top
    level tool. Individual tools are specified as a parameter to the
    "kwiver" tool runner.
 
-Vital Types
-
- * Added crop method to vital::image to get a cropped view of the image.
-
- * Added version of the get_image method to vital::image_container to get
-   a cropped view of the underlying image.
+ * Moved source of tools/applets and reorganized:
+   - tools - contains executables, E.g. kwiver tool runner
+   - vital/applets - contains applet framework
+   - arrows/core/applets - general applets
 
 Vital Bindings
 
- * Added python bindings for image_object_detector
-
-=======
 
 Arrows
 
@@ -241,6 +233,11 @@ Arrows: Python
    bindings of image_object_detector and replicates the functionality of
    example_detector in python
 
+Arrows: QT
+
+ * Added pipeline viewer applet/tool to visualize images in the
+   pipeline in real-time
+
 Sprokit
 
  * Changed KLT tracking pipeline to pass track change information between
@@ -256,8 +253,6 @@ Sprokit: Processes
 
  * Improved process timing instrumentation to provide simple stats for
    step entry.
-
-Tools
 
 Unit Tests
 
