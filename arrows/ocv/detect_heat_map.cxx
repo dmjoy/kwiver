@@ -590,7 +590,7 @@ public:
       // Make CV rect for bbox so that we can remove it from consideration
       // during next iteration.
       cv::Rect cv_bbox( x1, y1, x2 - x1, y2 - y1 );
-      heat_map(cv_bbox) = 0;
+      //heat_map(cv_bbox) = 0;
 
       ++cntr;
       if( cntr == m_max_boxes )
@@ -616,10 +616,10 @@ public:
 
     // Remove outer border of pixels because findContours has trouble with
     // regions connected to the edge of the image.
-    mask.row(0) = 0;
-    mask.col(0) = 0;
-    mask.row(mask.rows-1) = 0;
-    mask.col(mask.cols-1) = 0;
+    //mask.row(0) = 0;
+    //mask.col(0) = 0;
+    //mask.row(mask.rows-1) = 0;
+    //mask.col(mask.cols-1) = 0;
     cv::findContours(mask, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE,
                      cv::Point(0, 0) );
 
