@@ -36,4 +36,3 @@ kwiver_create_python_init( vital/util )
 kwiver_add_python_module( ${CMAKE_CURRENT_SOURCE_DIR}/VitalPIL.py
   vital/util
   VitalPIL )
-
