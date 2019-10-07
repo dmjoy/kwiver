@@ -30,3 +30,7 @@ kwiver_install_headers(
   NOPATH
   )
 
+kwiver_create_python_init(sprokit/util)
+kwiver_add_python_module( ${CMAKE_CURRENT_SOURCE_DIR}/test.py
+                          sprokit/util
+                          test)
