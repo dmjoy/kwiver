@@ -7,9 +7,7 @@
 # from sprokit.utilities import homography
 #from sprokit.utilities import timestamp
 from __future__ import print_function
-import sprokit.pipeline.datum
-import sprokit.pipeline.process
-import sprokit.pipeline.config
+from kwiver.sprokit.pipeline.process import PythonProcess
 
 # from libkwiver_python_convert_homography.homograpy import HomograpyTra
 import os.path
@@ -17,9 +15,9 @@ import os.path
 
 
 
-class HomographyWriterProcess(sprokit.pipeline.process.PythonProcess):
+class HomographyWriterProcess(PythonProcess):
     def __init__(self, conf):
-        sprokit.pipeline.process.PythonProcess.__init__(self, conf)
+        PythonProcess.__init__(self, conf)
 
         # declare our configuration items
         self.declare_configuration_key(
@@ -73,7 +71,7 @@ class HomographyWriterProcess(sprokit.pipeline.process.PythonProcess):
 
 # ----------------------------------------------------------------
 def __sprokit_register__():
-    from sprokit.pipeline import process_factory
+    from kwiver.sprokit.pipeline import process_factory
 
     module_name = 'python:kwiver.write_homography'
 
