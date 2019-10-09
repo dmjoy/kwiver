@@ -12,6 +12,5 @@ if (KWIVER_ENABLE_TOOLS)
   add_subdirectory(tools)
 endif ()
 
-add_subdirectory(bindings)
 add_subdirectory(processes)
 add_subdirectory(schedulers)
