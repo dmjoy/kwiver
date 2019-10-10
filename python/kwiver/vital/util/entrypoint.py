@@ -1,6 +1,7 @@
 from pkg_resources import iter_entry_points
 from kwiver.vital import vital_logging
 from kwiver import PYTHON_PLUGIN_ENTRYPOINT, CPP_SEARCH_PATHS_ENTRYPOINT
+import kwiver
 
 import os
 
@@ -34,3 +35,8 @@ def get_cpp_paths_from_entrypoint():
                         entry_point.key()))
     return additional_search_paths
 
+def get_library_path():
+    return os.path.join(os.path.dirname(os.path.abspath(kwiver.__file__)), 'lib')
+
+def get_vital_logger_factory():
+    return os.path.join(os.path.dirname(os.path.abspath(kwiver.__file__)), 'lib', 'kwiver', 'modules', 'vital_log4cplus_logger')
