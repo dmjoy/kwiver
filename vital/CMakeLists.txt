@@ -261,7 +261,7 @@ endif()
 
 # Build a default set of plugin path dirs
 # Provide that list as the default value for the path option.
-
+if( NOT SKBUILD )
 kwiver_make_module_path( ${CMAKE_INSTALL_PREFIX} ${kwiver_plugin_module_subdir} )
 set( vital_default_module_path ${kwiver_module_path_result} )
 
@@ -278,7 +278,7 @@ mark_as_advanced( KWIVER_DEFAULT_MODULE_PATHS )
 foreach( p IN LISTS KWIVER_DEFAULT_MODULE_PATHS )
   kwiver_add_module_path( ${p} )
 endforeach(p)
-
+endif()
 # need to retrieve the GLOBAL PROPERTY kwiver_plugin_path and
 # formulate the default module path
 get_property(plugin_path GLOBAL PROPERTY kwiver_plugin_path)

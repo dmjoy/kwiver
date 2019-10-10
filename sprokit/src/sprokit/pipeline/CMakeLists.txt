@@ -56,6 +56,7 @@ set(pipeline_headers
 
 set(pipeline_private_headers)
 
+if(NOT SKBUILD)
 kwiver_make_module_path( ${CMAKE_INSTALL_PREFIX} ${kwiver_plugin_process_subdir} )
 set( sprokit_default_module_paths ${kwiver_module_path_result} )
 
@@ -71,7 +72,7 @@ set(SPROKIT_DEFAULT_MODULE_PATHS "${sprokit_default_module_paths}"
 foreach( p IN LISTS   SPROKIT_DEFAULT_MODULE_PATHS )
   kwiver_add_module_path( ${p} )
 endforeach(p)
-
+endif()
 ##
 set(utils_build_options)
 
