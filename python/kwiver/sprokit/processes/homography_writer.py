@@ -7,12 +7,11 @@
 # from sprokit.utilities import homography
 #from sprokit.utilities import timestamp
 from __future__ import print_function
-from kwiver.sprokit.pipeline.process import PythonProcess
+from kwiver.sprokit.pipeline.process import PythonProcess, PortFlags
 
 # from libkwiver_python_convert_homography.homograpy import HomograpyTra
 import os.path
 # import libkwiver_python_convert_homography
-
 
 
 class HomographyWriterProcess(PythonProcess):
@@ -26,16 +25,12 @@ class HomographyWriterProcess(PythonProcess):
             'The output file name.')
 
 
-        required = sprokit.pipeline.process.PortFlags()
+        required = PortFlags()
         required.add(self.flag_required)
 
         # create input ports
-        #info = process.PortInfo('s2r_homography',  # type name
-        #                        required, 'Input homographies')
-
-        #self.declare_input_port('homography', info)
-        #                        name, type, flags, descrip
-        self.declare_input_port('homography', 'kwiver:s2r_homography', required, 'Input homographies' )
+        self.add_port_trait('homography', 'homography_src_to_ref', 'Input homographies')
+        self.declare_input_port_using_trait('homography', required)
 
     # ----------------------------------------------------------------
     def _configure(self):
@@ -47,8 +42,7 @@ class HomographyWriterProcess(PythonProcess):
 
     # ----------------------------------------------------------------
     def _step(self):
-        dat = self.grab_datum_from_port('homography')
-        h = dat.get_datum()
+        h = self.grab_input_using_trait('homography')
 
         for r in [ 0, 1, 2 ]:
             for c in [ 0, 1, 2 ]:
@@ -56,8 +50,8 @@ class HomographyWriterProcess(PythonProcess):
                 print(val, end=' ')
                 self.fout.write( '%.20g ' % val )
 
-        print(h.from_id(), h.to_id())
-        self.fout.write( '%d %d\n' % (h.from_id(), h.to_id()) )
+        print(h.from_id, h.to_id)
+        self.fout.write( '%d %d\n' % (h.from_id, h.to_id) )
         self.fout.flush()
         ## t = h # .transform()
 

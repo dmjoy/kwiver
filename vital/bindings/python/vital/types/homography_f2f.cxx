@@ -1,5 +1,5 @@
 /*ckwg +29
- * Copyright 2018 by Kitware, Inc.
+ * Copyright 2019 by Kitware, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -16,7 +16,7 @@
  *    to endorse or promote products derived from this software without specific
  *    prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR
@@ -28,62 +28,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <stdexcept>
 
-#ifndef KWIVER_CONFIG_FORMATTER_H
-#define KWIVER_CONFIG_FORMATTER_H
+#include <vital/vital_types.h>
+#include <vital/types/homography.h>
+#include <vital/types/homography_f2f.h>
 
-#include <vital/config/vital_config_export.h>
-#include <vital/config/config_block.h>
+#include <Eigen/Core>
 
-#include <string>
-#include <ostream>
+#include <pybind11/pybind11.h>
 
-namespace kwiver {
-namespace vital {
+namespace kv = kwiver::vital;
+namespace py = pybind11;
 
-/**
- * @brief Generates formatted versions of a config block.
- *
- * This class encapsulates several different formatting options for
- * a config block.
- */
-class VITAL_CONFIG_EXPORT config_block_formatter
+using f2f_homography = kv::f2f_homography;
+
+PYBIND11_MODULE(homography_f2f, m)
 {
-public:
-  config_block_formatter( const config_block_sptr config );
-  ~config_block_formatter() = default;
-
-  /**
-   * @brief Format config block in simple text format.
-   *
-   * @param str Stream to format on.
-   */
-  void print( std::ostream& str );
-
-  /**
-   * @brief Set line prefix for printing.
-   *
-   * @param pfx The prefix string.
-   */
-  void set_prefix( const std::string& pfx );
-
-  /**
-   * @brief Set option to generate source location.
-   *
-   * @param opt TRUE will generate the source location, FALSE will not.
-   */
-  void generate_source_loc( bool opt );
-
-private:
-  void format_block( std::ostream& str,
-                     const config_block_sptr config,
-                     const std::string& prefix );
-
-  config_block_sptr m_config;
-  std::string m_prefix;
-  bool m_gen_source_loc;
-};
-
-} } // end namespace
-
-#endif /* KWIVER_CONFIG_FORMATTER_H */
+  // This should wrap all of f2f_homography except for the (templated)
+  // constructor directly from an Eigen::Matrix and the copy
+  // constructor
+  py::class_<f2f_homography, std::shared_ptr<f2f_homography>>(m, "F2FHomography")
+    .def(py::init<kv::homography_sptr const&, kv::frame_id_t, kv::frame_id_t>())
+    .def(py::init<kv::frame_id_t>())
+    .def_property_readonly("homography", &f2f_homography::homography)
+    .def_property_readonly("from_id", &f2f_homography::from_id)
+    .def_property_readonly("to_id", &f2f_homography::to_id)
+    .def("inverse", &f2f_homography::inverse)
+    .def("__mul__", &f2f_homography::operator*)
+    .def("get",
+	 [] (f2f_homography const& self, int r, int c)
+	 {
+	   auto m = self.homography()->matrix();
+	   if(0 <= r && r < m.rows() && 0 <= c && c < m.cols())
+	   {
+	     return m(r, c);
+	   }
+	   throw std::out_of_range("Tried to perform get() out of bounds");
+	 },
+	 "Convenience method that returns the underlying coefficient"
+	 " at the given row and column")
+    ;
+}
